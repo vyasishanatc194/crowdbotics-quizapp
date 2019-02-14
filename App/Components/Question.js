@@ -2,6 +2,7 @@ import React from "react";
 import { View, Text, StyleSheet, Button, TouchableOpacity } from "react-native";
 import { RadioGroup, RadioButton } from "react-native-flexi-radio-button";
 import Colors from "../Resources/Colors";
+import HTML from 'he';
 
 export default class Question extends React.Component {
   constructor() {
@@ -33,14 +34,14 @@ export default class Question extends React.Component {
           let key2 = `${question.id}-100`;
           result.push(
             <RadioButton style={{ alignItems: 'center' }} value={question.correct_answer} key={key2}>
-              <Text style={styles.radioText}>{question.correct_answer}</Text>
+              <Text style={styles.radioText}>{this.renderHtmlText(question.correct_answer)}</Text>
             </RadioButton>
           );
         }
 
         result.push(
           <RadioButton value={item} key={key} style={{ alignItems: 'center' }}>
-            <Text style={styles.radioText}>{item}</Text>
+            <Text style={styles.radioText}>{this.renderHtmlText(item)}</Text>
           </RadioButton>
         );
       });
@@ -48,17 +49,20 @@ export default class Question extends React.Component {
       return result;
     }
   };
-
+  renderHtmlText(text) {
+    console.log(text,HTML.decode(text));
+    return HTML.decode(text);
+  }
   render() {
     return (
-      <View style={{ flex: 1,marginTop:20 }}>
+      <View style={{ flex: 1, marginTop: 20 }}>
         <View style={{ marginStart: '5%', marginEnd: '5%' }}>
           <Text style={{ fontSize: 16, color: Colors.orange, textAlign: "right" }}>
             {this.props.current + 1} out of 10
         </Text>
 
           <Text style={{ fontSize: 18, fontWeight: "bold", color: Colors.orange, marginBottom: 10 }}>
-            {this.props.question.question}
+            {this.renderHtmlText(this.props.question.question)}
           </Text>
           <RadioGroup
             color={Colors.orange}

@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, ActivityIndicator, Button, SafeAreaView, TouchableOpacity } from "react-native";
+import { View, Text, ActivityIndicator, StatusBar, SafeAreaView, TouchableOpacity } from "react-native";
 import ApiUrl from '../Network/ApiUrl';
 import Colors from '../Resources/Colors';
 import Question from '../Components/Question';
@@ -14,6 +14,7 @@ import Question from '../Components/Question';
  */
 
 class QuestionScreen extends React.Component {
+
 
     constructor(props) {
         super(props);
@@ -94,15 +95,19 @@ class QuestionScreen extends React.Component {
         this.fetchQuestions();
     }
     renderTimeTaken() {
-
-        var difference = this.state.endDate.getTime() - this.state.startDate.getTime(); // This will give difference in milliseconds
-        var resultInMinutes = Math.round(difference / 60000);
-        return resultInMinutes + ' mins';
+        if (this.state.startDate == undefined && this.state.endDate == undefined) {
+            return "0 mins"
+        } else {
+            var difference = this.state.endDate.getTime() - this.state.startDate.getTime(); // This will give difference in milliseconds
+            var resultInMinutes = Math.round(difference / 60000);
+            return resultInMinutes + ' mins';
+        }
     }
     render() {
         return (
             <SafeAreaView style={{ flex: 1, backgroundColor: Colors.white }}>
                 <View style={{ flex: 1, backgroundColor: Colors.white }}>
+                    <StatusBar translucent={true} backgroundColor={Colors.white} />
                     {!!this.state.loading && (
                         <View style={{ margin: 10, marginTop: 20 }}>
                             <ActivityIndicator size="small" color={Colors.orange} />
@@ -123,26 +128,27 @@ class QuestionScreen extends React.Component {
                     {this.state.completed === true && (
                         <View style={{ alignItems: "center", marginTop: 20 }}>
                             <Text style={{ fontSize: 25, textAlign: 'center' }}>Quiz Completed</Text>
-                            <Text style={{ fontSize: 16, textAlign: 'right', alignSelf: 'flex-end', marginEnd: '5%' }}>Time Taken : {this.renderTimeTaken()}</Text>
-                            <View style={{ backgroundColor: '#DDF8C2', width: '95%', margin: '5%' }}>
-                                <Text style={{ fontSize: 16, textAlign: 'center', fontWeight: 'bold', color: Colors.black }}>{'Marks : ' + this.state.results.score + '/50'}</Text>
+                            
+                            <View style={{ backgroundColor: Colors.orange, width: '95%', margin: '5%' }}>
+                                <Text style={{ fontSize: 20, textAlign: 'center', fontWeight: 'bold', color: Colors.white }}>{'Marks : ' + this.state.results.score + '/50'}</Text>
                                 <View style={{ backgroundColor: Colors.white, margin: 3, paddingStart: 5, paddingEnd: 5 }}>
                                     <View style={{ flexDirection: 'row' }}>
-                                        <Text style={{ flex: 1 }}> Correct Answers</Text><Text>:{" "}{this.state.results.correctAnswers}</Text>
+                                        <Text style={{ flex: 1 ,fontSize:16}}> Correct Answers</Text><Text style={{fontSize:16}}>:{" "}{this.state.results.correctAnswers}</Text>
                                     </View>
                                     <View style={{ flexDirection: 'row' }}>
-                                        <Text style={{ flex: 1 }}> Incorrect Answers</Text><Text>:{" "}{10 - this.state.results.correctAnswers}</Text>
+                                        <Text style={{ flex: 1,fontSize:16 }}> Incorrect Answers</Text><Text style={{fontSize:16}}>:{" "}{10 - this.state.results.correctAnswers}</Text>
                                     </View>
                                     <View style={{ flexDirection: 'row' }}>
-                                        <Text style={{ flex: 1 }}> Obtained Score</Text><Text>:{" "}{this.state.results.score}</Text>
+                                        <Text style={{ flex: 1 ,fontSize:16}}> Obtained Score</Text><Text style={{fontSize:16}}> :{" "}{this.state.results.score}</Text>
                                     </View>
 
                                 </View>
 
                             </View>
-                            <TouchableOpacity onPress={this.reset}>
+                            <Text style={{ fontSize: 18, textAlign: 'right', alignSelf: 'flex-end', marginEnd: '5%' ,marginBottom:20}}>Time Taken : {this.renderTimeTaken()}</Text>
+                            <TouchableOpacity onPress={this.reset} style={{ width:"80%" }}>
                                 <View style={{ borderRadius: 20, backgroundColor: Colors.orange, padding: 10, justifyContent: 'center', alignItems: 'center' }}>
-                                    <Text style={{ color: Colors.white, textAlign: 'center', fontWeight: 'bold' }}>Play again</Text>
+                                    <Text style={{ color: Colors.white, textAlign: 'center', fontWeight: 'bold',fontSize:16 }}>Play again</Text>
                                 </View>
                             </TouchableOpacity>
                         </View>
